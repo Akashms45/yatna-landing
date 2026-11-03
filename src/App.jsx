@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import CurtainReveal from './CurtainReveal'
 import {
   Sparkles,
   ArrowRight,
@@ -160,90 +161,96 @@ export default function App() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto">
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs sm:text-sm font-medium mb-8">
-          <Sparkles className="w-4 h-4 text-indigo-400" />
-          <span>Introducing Yatna 2.0 • Effort Reimagined</span>
-          <ChevronRight className="w-3.5 h-3.5" />
-        </div>
+      <CurtainReveal>
+        <section className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto">
+          <div data-reveal-bg className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-indigo-600/15 blur-[120px] rounded-full" />
+          </div>
 
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.15]">
-          Turn continuous effort into <br className="hidden sm:inline" />
-          <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
-            flawless digital execution
-          </span>
-        </h1>
+          <div data-reveal className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs sm:text-sm font-medium mb-8">
+            <Sparkles className="w-4 h-4 text-indigo-400" />
+            <span>Introducing Yatna 2.0 • Effort Reimagined</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </div>
 
-        <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-400 mb-10 leading-relaxed">
-          Yatna streamlines your engineering workflows, accelerates deployment lifecycles, and eliminates friction so your team can focus on building what matters.
-        </p>
+          <h1 data-reveal className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.15]">
+            Turn continuous effort into <br className="hidden sm:inline" />
+            <span className="bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">
+              flawless digital execution
+            </span>
+          </h1>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-xl shadow-indigo-500/25 flex items-center justify-center space-x-2 transition transform hover:-translate-y-0.5">
-            <span>Start Building for Free</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-          <button className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-200 transition">
-            Book a Live Demo
-          </button>
-        </div>
+          <p data-reveal className="max-w-2xl mx-auto text-base sm:text-lg text-slate-400 mb-10 leading-relaxed">
+            Yatna streamlines your engineering workflows, accelerates deployment lifecycles, and eliminates friction so your team can focus on building what matters.
+          </p>
 
-        {/* Live Terminal / Code Mockup */}
-        <div className="mt-16 text-left rounded-2xl border border-slate-800 bg-slate-900/90 shadow-2xl overflow-hidden backdrop-blur-md">
-          <div className="flex items-center justify-between px-4 py-3 bg-slate-950/90 border-b border-slate-800">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-              <span className="text-xs text-slate-400 ml-2 font-mono">yatna-core-cluster // main</span>
+          <div data-reveal className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-xl shadow-indigo-500/25 flex items-center justify-center space-x-2 transition transform hover:-translate-y-0.5">
+              <span>Start Building for Free</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-200 transition">
+              Book a Live Demo
+            </button>
+          </div>
+
+          {/* Live Terminal / Code Mockup */}
+          <div data-reveal className="mt-16 text-left rounded-2xl border border-slate-800 bg-slate-900/90 shadow-2xl overflow-hidden backdrop-blur-md">
+            <div className="flex items-center justify-between px-4 py-3 bg-slate-950/90 border-b border-slate-800">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                <span className="text-xs text-slate-400 ml-2 font-mono">yatna-core-cluster // main</span>
+              </div>
+              <div className="flex space-x-2 text-xs">
+                <button
+                  onClick={() => setActiveTab('pipeline')}
+                  className={`px-2.5 py-1 rounded-md transition ${activeTab === 'pipeline' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                >
+                  pipeline.yml
+                </button>
+                <button
+                  onClick={() => setActiveTab('terminal')}
+                  className={`px-2.5 py-1 rounded-md transition ${activeTab === 'terminal' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                >
+                  terminal
+                </button>
+              </div>
             </div>
-            <div className="flex space-x-2 text-xs">
-              <button
-                onClick={() => setActiveTab('pipeline')}
-                className={`px-2.5 py-1 rounded-md transition ${activeTab === 'pipeline' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}
-              >
-                pipeline.yml
-              </button>
-              <button
-                onClick={() => setActiveTab('terminal')}
-                className={`px-2.5 py-1 rounded-md transition ${activeTab === 'terminal' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'}`}
-              >
-                terminal
-              </button>
+            <div className="p-6 font-mono text-xs sm:text-sm text-slate-300 leading-relaxed overflow-x-auto">
+              {activeTab === 'pipeline' ? (
+                <pre className="text-slate-300">
+                  <code>
+                    <span className="text-indigo-400">version:</span> <span className="text-emerald-400">"2.4"</span>{'\n'}
+                    <span className="text-indigo-400">project:</span> yatna-production{'\n'}
+                    <span className="text-indigo-400">environment:</span> edge-global{'\n'}
+                    <span className="text-indigo-400">stages:</span>{'\n'}
+                    {'  '}- <span className="text-purple-400">name:</span> lint-and-test{'\n'}
+                    {'    '}<span className="text-indigo-400">run:</span> npm test && npm run lint{'\n'}
+                    {'  '}- <span className="text-purple-400">name:</span> build-and-optimize{'\n'}
+                    {'    '}<span className="text-indigo-400">framework:</span> react-vite-tailwind{'\n'}
+                    {'    '}<span className="text-indigo-400">target:</span> zero-cold-start{'\n'}
+                    {'  '}- <span className="text-purple-400">name:</span> deploy{'\n'}
+                    {'    '}<span className="text-indigo-400">strategy:</span> canary-rolling-update{'\n'}
+                    {'    '}<span className="text-emerald-400">status:</span> <span className="text-emerald-400 font-bold">SUCCESS (took 840ms)</span>
+                  </code>
+                </pre>
+              ) : (
+                <pre className="text-emerald-400">
+                  <code>
+                    $ yatna sync --remote=origin --branch=main{'\n'}
+                    <span className="text-slate-400">[0.12s] Connecting to secure gateway... Connected.</span>{'\n'}
+                    <span className="text-slate-400">[0.35s] Validating React + Vite + Tailwind manifests... Valid.</span>{'\n'}
+                    <span className="text-slate-400">[0.51s] Synchronizing Git HEAD to origin/main... Done.</span>{'\n'}
+                    <span className="text-cyan-400">[0.84s] Deployment live at: https://yatna-landing.dev</span>
+                  </code>
+                </pre>
+              )}
             </div>
           </div>
-          <div className="p-6 font-mono text-xs sm:text-sm text-slate-300 leading-relaxed overflow-x-auto">
-            {activeTab === 'pipeline' ? (
-              <pre className="text-slate-300">
-                <code>
-                  <span className="text-indigo-400">version:</span> <span className="text-emerald-400">"2.4"</span>{'\n'}
-                  <span className="text-indigo-400">project:</span> yatna-production{'\n'}
-                  <span className="text-indigo-400">environment:</span> edge-global{'\n'}
-                  <span className="text-indigo-400">stages:</span>{'\n'}
-                  {'  '}- <span className="text-purple-400">name:</span> lint-and-test{'\n'}
-                  {'    '}<span className="text-indigo-400">run:</span> npm test && npm run lint{'\n'}
-                  {'  '}- <span className="text-purple-400">name:</span> build-and-optimize{'\n'}
-                  {'    '}<span className="text-indigo-400">framework:</span> react-vite-tailwind{'\n'}
-                  {'    '}<span className="text-indigo-400">target:</span> zero-cold-start{'\n'}
-                  {'  '}- <span className="text-purple-400">name:</span> deploy{'\n'}
-                  {'    '}<span className="text-indigo-400">strategy:</span> canary-rolling-update{'\n'}
-                  {'    '}<span className="text-emerald-400">status:</span> <span className="text-emerald-400 font-bold">SUCCESS (took 840ms)</span>
-                </code>
-              </pre>
-            ) : (
-              <pre className="text-emerald-400">
-                <code>
-                  $ yatna sync --remote=origin --branch=main{'\n'}
-                  <span className="text-slate-400">[0.12s] Connecting to secure gateway... Connected.</span>{'\n'}
-                  <span className="text-slate-400">[0.35s] Validating React + Vite + Tailwind manifests... Valid.</span>{'\n'}
-                  <span className="text-slate-400">[0.51s] Synchronizing Git HEAD to origin/main... Done.</span>{'\n'}
-                  <span className="text-cyan-400">[0.84s] Deployment live at: https://yatna-landing.dev</span>
-                </code>
-              </pre>
-            )}
-          </div>
-        </div>
-      </section>
+        </section>
+      </CurtainReveal>
 
       {/* Metrics Section */}
       <section className="py-12 border-y border-slate-900 bg-slate-950/50">

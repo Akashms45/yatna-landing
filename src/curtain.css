@@ -1,0 +1,94 @@
+/* ---------- Overlay ---------- */
+.curtain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.curtain-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+}
+.curtain-panel--left  { left: 0; }
+/* Right curtain is the left one mirrored, so folds, light and shadows stay symmetrical */
+.curtain-panel--right { right: 0; transform: scaleX(-1); }
+
+/* ---------- One pleat of velvet ---------- */
+.curtain-strip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transform-origin: 50% 0%; /* skew pivots at the rail, so the hem lags behind the motion */
+  will-change: transform;
+  /* Each pleat casts a soft shadow onto the pleat beneath it. When the strips pile
+     up at the edge, this is what turns them into layered, heavy folds. */
+  box-shadow: -14px 0 30px -6px rgba(0, 0, 0, 0.72);
+  background-image:
+    /* 1. velvet pile: vertical dark streaks (stretched noise) */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='640'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.55 0.012' numOctaves='3' seed='4'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.1 0 0 0 -0.32'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    /* 2. stage light from above, falling into darkness at the hem */
+    linear-gradient(180deg, rgba(255, 214, 190, 0.22) 0%, rgba(255, 214, 190, 0.05) 30%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.55) 100%),
+    /* 3. secondary micro-folds inside the pleat */
+    linear-gradient(90deg, transparent 0 22%, rgba(255, 170, 170, 0.07) 30%, rgba(0, 0, 0, 0.16) 38%, transparent 46%, rgba(255, 170, 170, 0.05) 62%, rgba(0, 0, 0, 0.14) 74%, transparent 82%),
+    /* 4. the pleat itself: deep valley, soft shoulder, bright crest, falloff */
+    linear-gradient(90deg, #14030a 0%, #3f0a15 12%, #6e1422 28%, #9b2234 44%, #b32c40 50%, #8a1a2b 60%, #4d0d1a 80%, #1a040c 100%);
+  background-size: 220px 640px, 100% 100%, 100% 100%, 100% 100%;
+}
+
+/* Per-pleat darkness; GSAP animates --shade so folds deepen as the cloth bunches up */
+.curtain-strip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: var(--shade, 0);
+  pointer-events: none;
+}
+
+/* ---------- Seam, valance, vignette ---------- */
+.curtain-seam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 6px;
+  margin-left: -3px;
+  z-index: 30;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.75), transparent);
+  pointer-events: none;
+}
+
+.curtain-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 38%, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.curtain-valance {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: clamp(48px, 8vh, 92px);
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 214, 190, 0.16), rgba(0, 0, 0, 0.45)),
+    repeating-linear-gradient(90deg, #2a0710 0, #5d111f 10px, #9b2234 22px, #5d111f 34px, #2a0710 46px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.65);
+}
+.curtain-valance::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  background: linear-gradient(180deg, #f0d28a, #a9791f 55%, #5b3d08);
+}
