@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import CurtainReveal from './CurtainReveal'
+import heroImage from './assets/hero.png'
 import {
   Sparkles,
   ArrowRight,
@@ -27,6 +28,7 @@ function GithubIcon({ className = "w-4 h-4" }) {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('pipeline')
+  const [replayCount, setReplayCount] = useState(0)
 
   const features = [
     {
@@ -144,6 +146,14 @@ export default function App() {
           </nav>
 
           <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setReplayCount((c) => c + 1)}
+              className="inline-flex items-center space-x-1.5 text-xs text-amber-300 hover:text-amber-200 px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 transition cursor-pointer"
+              title="Watch curtain reveal again"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Replay Reveal</span>
+            </button>
             <a
               href="https://github.com/Akashms45/yatna-landing"
               target="_blank"
@@ -161,10 +171,16 @@ export default function App() {
       </header>
 
       {/* Hero Section */}
-      <CurtainReveal>
+      <CurtainReveal replayKey={replayCount}>
         <section className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto">
-          <div data-reveal-bg className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-indigo-600/15 blur-[120px] rounded-full" />
+          <div data-reveal-bg className="absolute inset-0 pointer-events-none -z-10 flex items-center justify-center overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.22)_0%,rgba(15,23,42,0.8)_60%,rgba(2,6,23,0.95)_100%)] z-10" />
+            <img
+              src={heroImage}
+              alt="Yatna Platform Visual"
+              className="w-full max-w-3xl h-auto object-contain opacity-30 mix-blend-screen filter drop-shadow-[0_0_50px_rgba(99,102,241,0.35)]"
+            />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-indigo-600/20 blur-[130px] rounded-full" />
           </div>
 
           <div data-reveal className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs sm:text-sm font-medium mb-8">

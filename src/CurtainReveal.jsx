@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import "./curtain.css";
 
@@ -7,13 +7,6 @@ import "./curtain.css";
  *   data-reveal-bg  -> the background image/element (slow settle-in zoom)
  *   data-reveal     -> heading, description, CTA wrapper... (staggered fade + rise, in DOM order)
  */
-
-// Survives route remounts so the intro only ever plays once per page load.
-let hasPlayed = false;
-
-const prefersReducedMotion = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
 // Deterministic pseudo-random (no SSR/hydration mismatch, stable between renders)
 const rand = (i, salt) => {
@@ -55,11 +48,18 @@ function Panel({ side, count }) {
   );
 }
 
-export default function CurtainReveal({ children }) {
+export default function CurtainReveal({ children, replayKey = 0 }) {
   const rootRef = useRef(null);
   const tlRef = useRef(null);
-  const [done, setDone] = useState(() => hasPlayed || prefersReducedMotion());
+  const [done, setDone] = useState(false);
   const [count] = useState(pleatCount);
+
+  // If replayKey changes, re-trigger curtain intro
+  useEffect(() => {
+    if (replayKey > 0) {
+      setDone(false);
+    }
+  }, [replayKey]);
 
   useLayoutEffect(() => {
     if (done) return;
@@ -67,72 +67,81 @@ export default function CurtainReveal({ children }) {
     const q = gsap.utils.selector(rootRef);
     const html = document.documentElement;
     const prevOverflow = html.style.overflow;
-    html.style.overflow = "hidden"; // no scrolling behind the curtains
+    html.style.overflow = "hidden"; // prevent scrolling while curtains are active
 
     const ctx = gsap.context(() => {
       const reveal = q("[data-reveal]");
       const bg = q("[data-reveal-bg]");
       const strips = q(".curtain-strip");
 
-      // Hidden before first paint (layout effect), so the hero never flashes.
-      gsap.set(reveal, { opacity: 0, y: 46 });
-      gsap.set(bg, { scale: 1.14 });
+      // Set initial hidden positions for revealed elements
+      gsap.set(reveal, { opacity: 0, y: 36 });
+      if (bg.length > 0) {
+        gsap.set(bg, { scale: 1.15, opacity: 0.3 });
+      }
 
-      const START = 0.8; // beat of stillness before the pull
-      const OPEN = 4.8; // per-pleat travel time
-      const LAG = 0.07; // delay between neighbouring pleats (the "pull" travelling through cloth)
+      const START = 0.35; // brief stillness before opening
+      const OPEN = 3.2;   // velvet parting travel time
+      const LAG = 0.055;  // wave delay between pleats
       const lead = count - 1;
 
       const tl = gsap.timeline({
         onComplete: () => {
-          hasPlayed = true;
+          // Ensure all hero elements are fully visible and clear inline GSAP overrides
+          gsap.set(reveal, { opacity: 1, y: 0, clearProps: "opacity,transform" });
+          if (bg.length > 0) {
+            gsap.set(bg, { scale: 1, opacity: 1, clearProps: "transform" });
+          }
           setDone(true);
         },
       });
       tlRef.current = tl;
 
-      tl.to(q(".curtain-seam"), { opacity: 0, duration: 0.7, ease: "power1.out" }, START);
+      // Part the center seam
+      tl.to(q(".curtain-seam"), { opacity: 0, duration: 0.5, ease: "power1.out" }, START);
 
+      // Animate each velvet pleat
       strips.forEach((el) => {
         const i = Number(el.dataset.i);
         const shade0 = Number(el.dataset.shade);
-        // pleats deeper in the pile (low i) end up in heavier shadow
         const shade1 = 0.1 + (1 - i / lead) * 0.45;
-        // Leading edge (highest i) is pulled first; the rest follow.
         const at = START + (lead - i) * LAG;
-        // Slot offset -> gathered offset, expressed in % of the pleat's own width (responsive)
         const xPercent = -((i * (1 - GATHERED)) / OVERLAP) * 100;
 
         tl.to(el, { xPercent, duration: OPEN, ease: "power2.inOut" }, at);
-        // Hem drags behind the rail: a gentle skew that swells and settles
-        tl.to(el, { skewX: 2.4, duration: OPEN * 0.45, ease: "sine.inOut", yoyo: true, repeat: 1 }, at);
-        // Folds deepen as the cloth bunches up
+        tl.to(el, { skewX: 2.2, duration: OPEN * 0.45, ease: "sine.inOut", yoyo: true, repeat: 1 }, at);
         tl.fromTo(el, { "--shade": shade0 }, { "--shade": shade1, duration: OPEN, ease: "power1.inOut" }, at);
       });
 
-      // Hero settles in while the curtains part
-      tl.to(bg, { scale: 1, duration: OPEN + 2, ease: "power2.out" }, START);
+      // Background hero zooms and settles smoothly
+      if (bg.length > 0) {
+        tl.to(bg, { scale: 1, opacity: 1, duration: OPEN + 1, ease: "power2.out" }, START);
+      }
 
-      // Content arrives once the stage is about half open
+      // Hero content rises and reveals as stage opens
       tl.to(
         reveal,
-        { opacity: 1, y: 0, duration: 1.3, stagger: 0.22, ease: "power3.out" },
-        START + OPEN * 0.55
+        { opacity: 1, y: 0, duration: 1.1, stagger: 0.18, ease: "power3.out" },
+        START + OPEN * 0.32
       );
 
-      // Fade the gathered drapes away so they never block the hero
+      // Fade out overlay gently
       const end = START + OPEN + lead * LAG;
-      tl.to(q(".curtain-overlay"), { opacity: 0, duration: 1, ease: "power1.out" }, end - 0.2);
+      tl.to(q(".curtain-overlay"), { opacity: 0, duration: 0.8, ease: "power1.out" }, end - 0.25);
     }, rootRef);
 
     return () => {
-      ctx.revert(); // kills tweens, restores inline styles (hero returns to its natural CSS state)
+      ctx.revert();
       html.style.overflow = prevOverflow;
     };
-  }, [done, count]);
+  }, [done, count, replayKey]);
 
-  // Click anywhere on the curtain to speed through the intro
-  const skip = () => tlRef.current?.timeScale(5);
+  // Click anywhere on curtains to fast-forward
+  const skip = () => {
+    if (tlRef.current) {
+      tlRef.current.timeScale(6);
+    }
+  };
 
   return (
     <div ref={rootRef} className="relative">
@@ -145,6 +154,7 @@ export default function CurtainReveal({ children }) {
           <div className="curtain-seam" />
           <div className="curtain-vignette" />
           <div className="curtain-valance" />
+          <div className="curtain-skip-hint">Click anywhere to skip</div>
         </div>
       )}
     </div>

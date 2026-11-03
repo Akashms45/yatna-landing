@@ -5,6 +5,32 @@
   z-index: 9999;
   overflow: hidden;
   cursor: pointer;
+  user-select: none;
+}
+
+.curtain-skip-hint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  font-size: 12px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  animation: pulse-hint 2s infinite ease-in-out;
+}
+
+@keyframes pulse-hint {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
 }
 
 .curtain-panel {
