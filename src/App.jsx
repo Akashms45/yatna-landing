@@ -173,14 +173,20 @@ export default function App() {
       {/* Hero Section */}
       <CurtainReveal replayKey={replayCount}>
         <section className="relative pt-24 pb-20 px-4 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto">
+          {/* Theatrical Stage Spotlight & Backdrop */}
           <div data-reveal-bg className="absolute inset-0 pointer-events-none -z-10 flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.22)_0%,rgba(15,23,42,0.8)_60%,rgba(2,6,23,0.95)_100%)] z-10" />
-            <img
-              src={heroImage}
-              alt="Yatna Platform Visual"
-              className="w-full max-w-3xl h-auto object-contain opacity-30 mix-blend-screen filter drop-shadow-[0_0_50px_rgba(99,102,241,0.35)]"
-            />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-indigo-600/20 blur-[130px] rounded-full" />
+            {/* Top Stage Spotlight Cone */}
+            <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.45)_0%,rgba(168,85,247,0.2)_40%,transparent_75%)] blur-[40px]" />
+            
+            {/* Glowing Stage Floor Rings */}
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[680px] h-[680px] rounded-full border border-indigo-500/20 shadow-[0_0_80px_rgba(99,102,241,0.25)]" />
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[460px] h-[460px] rounded-full border border-purple-500/25 shadow-[0_0_60px_rgba(168,85,247,0.2)]" />
+            
+            {/* Center Radiant Core */}
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[300px] bg-gradient-to-tr from-indigo-500/30 via-purple-500/25 to-pink-500/20 blur-[100px] rounded-full" />
+            
+            {/* Grid Pattern Floor Texture */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e1b4b18_1px,transparent_1px),linear-gradient(to_bottom,#1e1b4b18_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)]" />
           </div>
 
           <div data-reveal className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs sm:text-sm font-medium mb-8">
