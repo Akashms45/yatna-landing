@@ -17,7 +17,8 @@
 /* Right curtain = left curtain mirrored, so light and shadows stay symmetrical */
 .curtain-panel--right { right: 0; transform: scaleX(-1); }
 
-/* ---------- One fold of brick-red satin polyester ----------
+/* ---------- One fold of plain, dark brick-red cloth ----------
+   No texture lines: only smooth shading, so the folds read as soft cloth.
    --crest : where the soft highlight sits inside the fold (GSAP slides it as the cloth moves)
    --shade : extra darkness, deepens as folds bunch together */
 .curtain-strip {
@@ -27,29 +28,25 @@
   bottom: 0;
   transform-origin: 50% 0%; /* skew pivots at the top, so the hem lags behind */
   will-change: transform;
-  box-shadow: -16px 0 34px -8px rgba(0, 0, 0, 0.6);
+  box-shadow: -18px 0 40px -10px rgba(0, 0, 0, 0.55);
   background-image:
-    /* 1. polyester weave: fine warp + weft threads (moves with the cloth) */
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.10) 0 1px, transparent 1px 3px),
-    repeating-linear-gradient(90deg, rgba(255, 220, 200, 0.045) 0 1px, transparent 1px 3px),
-    /* 2. restrained overhead light: gentle at the top, deep at the hem */
+    /* 1. gentle overhead light, falling into darkness at the hem */
     linear-gradient(180deg,
-      rgba(255, 225, 205, 0.11) 0%,
-      rgba(255, 225, 205, 0.02) 24%,
-      rgba(255, 235, 225, 0.04) 48%,
-      rgba(0, 0, 0, 0) 62%,
+      rgba(255, 215, 195, 0.07) 0%,
+      rgba(255, 215, 195, 0) 28%,
+      rgba(0, 0, 0, 0) 55%,
       rgba(0, 0, 0, 0.5) 100%),
-    /* 3. satin fold in brick red: smooth valley -> body -> low, broad sheen -> falloff */
+    /* 2. smooth fold in dark brick red: deep valley -> body -> soft crest -> falloff */
     linear-gradient(90deg,
-      #1c0a07 0%,
-      #45170f calc(var(--crest) * 0.45),
-      #7a2e21 calc(var(--crest) * 0.78),
-      #a2452f calc(var(--crest) - 5%),
-      #c26a50 var(--crest),
-      #a2452f calc(var(--crest) + 5%),
-      #6d281c calc(var(--crest) + 18%),
-      #2e100a calc(var(--crest) + 38%),
-      #1c0a07 100%);
+      #190806 0%,
+      #38120c calc(var(--crest) * 0.45),
+      #62241a calc(var(--crest) * 0.78),
+      #7d3223 calc(var(--crest) - 6%),
+      #8f3d2b var(--crest),
+      #7d3223 calc(var(--crest) + 6%),
+      #581f16 calc(var(--crest) + 20%),
+      #290d09 calc(var(--crest) + 40%),
+      #190806 100%);
 }
 
 .curtain-strip::after {
@@ -70,7 +67,7 @@
   width: 6px;
   margin-left: -3px;
   z-index: 30;
-  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.7), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.6), transparent);
   pointer-events: none;
 }
 
