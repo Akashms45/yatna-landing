@@ -8,6 +8,13 @@ import "./curtain.css";
  *   data-reveal     -> heading, description, CTA wrapper... (staggered fade + rise, in DOM order)
  */
 
+// Survives route remounts so the intro only plays once per page load.
+let hasPlayed = false;
+
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
 // Deterministic pseudo-random: stable between renders, no SSR mismatch
 const rand = (i, salt) => {
   const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
@@ -75,7 +82,6 @@ export default function CurtainReveal({ children, replayKey = 0 }) {
   const leftFolds = useMemo(() => makeFolds(count, 1), [count]);
   const rightFolds = useMemo(() => makeFolds(count, 7), [count]);
 
-  // Support replaying whenever replayKey changes
   useEffect(() => {
     if (replayKey > 0) {
       setDone(false);
@@ -95,34 +101,32 @@ export default function CurtainReveal({ children, replayKey = 0 }) {
       const bg = q("[data-reveal-bg]");
       const strips = q(".curtain-strip");
 
-      // Initial state: subtle hidden offset, stage background slightly scaled up
-      gsap.set(reveal, { opacity: 0, y: 32 });
+      // Hidden before first paint, so the hero never flashes
+      gsap.set(reveal, { opacity: 0, y: 46 });
       if (bg.length > 0) {
-        gsap.set(bg, { scale: 1.15, opacity: 0.8 });
+        gsap.set(bg, { scale: 1.14 });
       }
 
-      // Responsive, brisk timing so hero reveals immediately as curtains open
-      const START = 0.25; // beat before pulling
-      const OPEN = 2.6;   // swift, graceful travel time per fold
-      const LAG = 0.045;  // smooth ripple delay between neighbouring folds
+      const START = 0.8; // a beat of stillness before the pull
+      const OPEN = 5.4; // travel time per fold
+      const LAG = 0.07; // delay between neighbouring folds (the pull travels through the cloth)
       const lead = count - 1;
 
       const tl = gsap.timeline({
         onComplete: () => {
+          hasPlayed = true;
           gsap.set(reveal, { opacity: 1, y: 0, clearProps: "all" });
           if (bg.length > 0) {
-            gsap.set(bg, { scale: 1, opacity: 1, clearProps: "all" });
+            gsap.set(bg, { scale: 1, clearProps: "all" });
           }
           setDone(true);
         },
       });
       tlRef.current = tl;
 
-      // Center seam & vignette open up
-      tl.to(q(".curtain-seam"), { opacity: 0, duration: 0.4, ease: "power1.out" }, START);
-      tl.to(q(".curtain-vignette"), { opacity: 0, duration: OPEN * 0.8, ease: "power1.inOut" }, START);
+      tl.to(q(".curtain-seam"), { opacity: 0, duration: 0.7, ease: "power1.out" }, START);
+      tl.to(q(".curtain-vignette"), { opacity: 0, duration: OPEN, ease: "power1.inOut" }, START + OPEN * 0.3);
 
-      // Animate each silk fold off-screen
       strips.forEach((el) => {
         const i = Number(el.dataset.i);
         const left = Number(el.dataset.left);
@@ -131,61 +135,53 @@ export default function CurtainReveal({ children, replayKey = 0 }) {
         const shade0 = Number(el.dataset.shade);
         const skew = Number(el.dataset.skew);
 
-        // Leading edge (nearest center) pulled first
+        // Leading edge (highest i) is pulled first; the rest follow.
         const at = START + (lead - i) * LAG;
 
-        // Travel off-screen
-        const xPercent = -((left + width + 8) / width) * 100;
+        // ONE continuous motion straight off the screen. Because each fold travels by
+        // (its own offset + its width), the spacing shrinks as it moves: the cloth bunches
+        // up and keeps going, never parking in a pile.
+        const xPercent = -((left + width + 4) / width) * 100;
         tl.to(el, { xPercent, duration: OPEN, ease: "power2.inOut" }, at);
 
-        // Hem lag & silk sway
+        // Hem drags behind the rail: gentle skew that swells and settles (different per fold)
         tl.to(el, { skewX: skew, duration: OPEN * 0.42, ease: "sine.inOut", yoyo: true, repeat: 1 }, at);
 
-        // Silk shimmer highlight travels across the cloth
+        // Silk shimmer: the highlight slides across the fold as the cloth moves
         tl.fromTo(
           el,
           { "--crest": `${crest}%` },
-          { "--crest": `${crest + 18}%`, duration: OPEN * 0.5, ease: "sine.inOut", yoyo: true, repeat: 1 },
+          { "--crest": `${crest + 9}%`, duration: OPEN * 0.5, ease: "sine.inOut", yoyo: true, repeat: 1 },
           at
         );
 
-        // Folds darken as they bunch up
-        const peak = 0.12 + (1 - i / lead) * 0.35;
+        // Folds darken as they bunch (peaks mid-way), then clear as they leave
+        const peak = 0.12 + (1 - i / lead) * 0.4;
         tl.fromTo(el, { "--shade": shade0 }, { "--shade": peak, duration: OPEN * 0.5, ease: "power1.inOut" }, at);
         tl.to(el, { "--shade": shade0, duration: OPEN * 0.5, ease: "power1.inOut" }, at + OPEN * 0.5);
       });
 
-      // Background stage zooms smoothly into position
+      // Hero settles in while the curtains part
       if (bg.length > 0) {
-        tl.to(bg, { scale: 1, opacity: 1, duration: OPEN + 0.6, ease: "power2.out" }, START);
+        tl.to(bg, { scale: 1, duration: OPEN + 2, ease: "power2.out" }, START);
       }
 
-      // Hero content arrives promptly as the center opens (at ~0.8s)
+      // Content arrives once the centre is clear
       tl.to(
         reveal,
-        { opacity: 1, y: 0, duration: 0.9, stagger: 0.12, ease: "power3.out" },
-        START + OPEN * 0.22
+        { opacity: 1, y: 0, duration: 1.3, stagger: 0.22, ease: "power3.out" },
+        START + OPEN * 0.5
       );
-
-      // Fade out overlay as curtains exit the screen
-      const totalTime = START + OPEN + lead * LAG;
-      tl.to(q(".curtain-overlay"), { opacity: 0, duration: 0.5, ease: "power1.out" }, totalTime - 0.4);
     }, rootRef);
 
     return () => {
-      ctx.revert();
+      ctx.revert(); // kills tweens, restores inline styles (hero returns to its natural CSS state)
       html.style.overflow = prevOverflow;
     };
   }, [done, count, replayKey]);
 
-  // Click anywhere on curtain to immediately finish
-  const skip = () => {
-    if (tlRef.current) {
-      tlRef.current.progress(1);
-    } else {
-      setDone(true);
-    }
-  };
+  // Click anywhere on the curtain to speed through the intro
+  const skip = () => tlRef.current?.timeScale(5);
 
   return (
     <div ref={rootRef} className="relative">
