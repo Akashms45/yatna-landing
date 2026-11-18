@@ -1,7 +1,64 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Malige';
+  src: url('/font/Malige.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Malige';
+  src: url('/font/Malige_Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KarGopalakrishnaAdiga';
+  src: url('/font/Kar-Gopalakrishna-Adiga.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-doodle: "Patrick Hand", "Caveat", "Malige", cursive, sans-serif;
+  --font-malige: "Malige", system-ui, sans-serif;
+  --font-logo: "KarGopalakrishnaAdiga", "Malige", serif, system-ui, sans-serif;
+  --font-serif: "Malige", serif;
+  --font-sans: "Malige", sans-serif;
+
+  --color-warm-cream: #F7F0E3;
+  --color-soft-cream: #FFF9EE;
+  --color-brick-red: #9E3D2F;
+  --color-deep-brick: #742C25;
+  --color-muted-gold: #C79A45;
+  --color-dark-brown: #30251F;
+  --color-warm-brown: #76665A;
+  --color-beige-border: #D9C7AA;
+  --color-muted-green: #587047;
+}
+
 @layer base {
+  html,
   body {
-    @apply bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white min-h-screen font-sans;
+    background-color: #F7F0E3;
+    color: #30251F;
+    font-family: var(--font-malige);
+    antialiased: true;
+    min-height: 100vh;
+    /* Hide scrollbars while allowing full scrolling */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
 }
