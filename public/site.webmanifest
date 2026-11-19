@@ -1,0 +1,23 @@
+{
+  "name": "Yatna — A Companion on the Path of Devotion",
+  "short_name": "Yatna",
+  "description": "Connecting devotees with sacred temple poojas, authentic sevas, and divine blessings across Karnataka.",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "theme_color": "#742C25",
+  "background_color": "#F7F0E3",
+  "display": "standalone"
+}

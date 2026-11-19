@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yatna-landing-jvy1.vercel.app/sitemap.xml
+
