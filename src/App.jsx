@@ -13,37 +13,61 @@ export default function App() {
   // 0: Kannada, 1: English, 2: Hindi
   const [langIndex, setLangIndex] = useState(0);
 
+  // Helper to determine if URL path or legacy hash indicates the privacy screen
+  const isPrivacyRoute = () => {
+    if (typeof window === 'undefined') return false;
+    const path = window.location.pathname.replace(/\/+$/, '');
+    const hash = window.location.hash;
+    return path === '/privacy' || hash === '#privacy' || hash === '#/privacy';
+  };
+
   // Screen state: 'landing' | 'privacy'
   const [currentScreen, setCurrentScreen] = useState(() => {
-    if (typeof window !== 'undefined' && window.location.hash === '#privacy') {
-      return 'privacy';
-    }
-    return 'landing';
+    return isPrivacyRoute() ? 'privacy' : 'landing';
   });
 
-  // Synchronize hash with currentScreen (supports browser Back / Forward buttons)
+  // Keep browser URL clean: ensure NO '#' exists in the URL, only '/' or '/privacy'
   useEffect(() => {
-    const handleHashChange = () => {
-      if (window.location.hash === '#privacy') {
-        setCurrentScreen('privacy');
-      } else if (currentScreen === 'privacy' && window.location.hash !== '#privacy') {
-        setCurrentScreen('landing');
+    // Clean initial URL on mount if it contains '#' or if navigating to /privacy
+    if (typeof window !== 'undefined') {
+      const isPrivacy = isPrivacyRoute();
+      const targetPath = isPrivacy ? '/privacy' : '/';
+      if (window.location.hash || (isPrivacy && window.location.pathname !== '/privacy')) {
+        window.history.replaceState(null, '', targetPath);
+      }
+    }
+
+    // Handle browser Back / Forward buttons (popstate)
+    const handlePopState = () => {
+      const isPrivacy = isPrivacyRoute();
+      setCurrentScreen(isPrivacy ? 'privacy' : 'landing');
+      if (window.location.hash) {
+        window.history.replaceState(null, '', isPrivacy ? '/privacy' : '/');
       }
     };
 
+    // If an accidental hashchange ever occurs, strip '#' immediately
+    const handleHashChange = () => {
+      const isPrivacy = isPrivacyRoute();
+      setCurrentScreen(isPrivacy ? 'privacy' : 'landing');
+      window.history.replaceState(null, '', isPrivacy ? '/privacy' : '/');
+    };
+
+    window.addEventListener('popstate', handlePopState);
     window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [currentScreen]);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
 
   const handleOpenPrivacy = () => {
-    window.location.hash = '#privacy';
+    window.history.pushState(null, '', '/privacy');
     setCurrentScreen('privacy');
   };
 
   const handleClosePrivacy = () => {
-    if (window.location.hash === '#privacy') {
-      window.history.pushState(null, '', window.location.pathname + window.location.search);
-    }
+    window.history.pushState(null, '', '/');
     setCurrentScreen('landing');
   };
 

@@ -29,10 +29,10 @@ export default function Navbar({ onReplay }) {
 
         {/* Links */}
         <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-[#5C5449]">
-          <a href="#features" className="hover:text-[#1C1917] transition-colors">Features</a>
-          <a href="#architecture" className="hover:text-[#1C1917] transition-colors">Architecture</a>
-          <a href="#pricing" className="hover:text-[#1C1917] transition-colors">Pricing</a>
-          <a href="#docs" className="hover:text-[#1C1917] transition-colors">Docs</a>
+          <a href="/features" className="hover:text-[#1C1917] transition-colors">Features</a>
+          <a href="/architecture" className="hover:text-[#1C1917] transition-colors">Architecture</a>
+          <a href="/pricing" className="hover:text-[#1C1917] transition-colors">Pricing</a>
+          <a href="/docs" className="hover:text-[#1C1917] transition-colors">Docs</a>
         </nav>
 
         {/* Action Controls */}
