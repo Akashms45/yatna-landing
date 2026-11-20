@@ -579,7 +579,7 @@ export default function Poojas({ langIndex = 0 }) {
       const calcScroll = () => {
         const totalCardsWidth = cardsTrack.scrollWidth;
         const windowWidth = window.innerWidth;
-        return Math.max(0, totalCardsWidth - windowWidth + 180);
+        return Math.max(0, totalCardsWidth - windowWidth + (windowWidth < 640 ? 40 : 180));
       };
 
       const tl = gsap.timeline({
@@ -626,11 +626,11 @@ export default function Poojas({ langIndex = 0 }) {
     >
       {/* =================================================================== */}
       {/* CUSTOM "view" CURSOR BUBBLE (Exact match to reference image 1)      */}
-      {/* Appears when hovering over any pooja card                           */}
+      {/* Appears when hovering over any pooja card (Desktop only)            */}
       {/* =================================================================== */}
       <div
         aria-hidden="true"
-        className="fixed pointer-events-none z-50 transition-opacity duration-200"
+        className="hidden md:block fixed pointer-events-none z-50 transition-opacity duration-200"
         style={{
           left: `${cursorPos.x}px`,
           top: `${cursorPos.y}px`,
@@ -762,7 +762,7 @@ export default function Poojas({ langIndex = 0 }) {
         <div className="relative z-10 w-full flex-1 flex items-center overflow-visible">
           <div
             ref={cardsTrackRef}
-            className="relative h-[560px] sm:h-[620px] will-change-transform"
+            className="relative h-[560px] sm:h-[620px] will-change-transform origin-left scale-[0.80] xs:scale-[0.86] sm:scale-100"
             style={{ width: '5800px' }}
           >
             {POOJAS_DATA.map((card) => {
@@ -893,7 +893,7 @@ export default function Poojas({ langIndex = 0 }) {
           onClick={() => setSelectedPooja(null)}
         >
           <div
-            className="relative w-full max-w-2xl bg-[#FFF9EE] rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-[#E5C07B]/60 select-none text-[#30251F] max-h-[75vh] overflow-y-auto transform transition-transform duration-300 ease-out animate-in slide-in-from-bottom-20 fade-in"
+            className="relative w-full max-w-2xl bg-[#FFF9EE] rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl border-2 border-[#E5C07B]/60 select-none text-[#30251F] max-h-[85vh] sm:max-h-[75vh] overflow-y-auto transform transition-transform duration-300 ease-out animate-in slide-in-from-bottom-20 fade-in"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button X */}

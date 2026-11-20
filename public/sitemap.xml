@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home Section -->
   <url>
     <loc>https://yatna-landing-jvy1.vercel.app/</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Hero Menu: About Us Section -->
+  <url>
+    <loc>https://yatna-landing-jvy1.vercel.app/about</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Hero Menu: Sacred Poojas & Sevas -->
+  <!-- <url>
+    <loc>https://yatna-landing-jvy1.vercel.app/poojas</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url> -->
+
+  <!-- Hero Menu: Poorna Phala Devotion -->
+  <url>
+    <loc>https://yatna-landing-jvy1.vercel.app/poornaphala</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Privacy Policy Screen -->
   <url>
     <loc>https://yatna-landing-jvy1.vercel.app/privacy</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
 </urlset>
-

@@ -46,19 +46,23 @@ const FOOTER_CONTENT = {
     menu: [
       {
         label: ['Home', 'Home', 'Home'],
-        href: '#hero',
+        href: '/',
+        targetId: 'hero',
       },
       {
         label: ['About', 'About', 'About'],
-        href: '#about',
+        href: '/about',
+        targetId: 'about',
       },
       {
         label: ['Poojas', 'Poojas', 'Poojas'],
-        href: '#poojas',
+        href: '/poojas',
+        targetId: 'poojas',
       },
       {
         label: ['Poornaphala', 'Poornaphala', 'Poornaphala'],
-        href: '#poornaphala',
+        href: '/poornaphala',
+        targetId: 'poornaphala',
       },
     ],
     playStoreUrl: 'https://play.google.com/store/apps',
@@ -118,7 +122,7 @@ export default function Footer({ langIndex = 0, onOpenPrivacy }) {
     setIsSubmitted(false);
   };
 
-  const handleNavClick = (e, href) => {
+  const handleNavClick = (e, href, targetId) => {
     e.preventDefault();
     if (href === '/privacy' || href === '#privacy') {
       if (onOpenPrivacy) {
@@ -126,27 +130,46 @@ export default function Footer({ langIndex = 0, onOpenPrivacy }) {
       }
       return;
     }
-    const target = document.querySelector(href);
+    const target = targetId ? document.getElementById(targetId) : (href && href.startsWith('#') ? document.querySelector(href) : null);
     if (target) {
       target.scrollIntoView({ behavior: 'smooth' });
+    } else if (href === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    if (typeof window !== 'undefined' && window.location.pathname !== href) {
+      window.history.pushState(null, '', href);
     }
   };
 
   return (
     <footer id="footer" className="relative w-full bg-[#F7F0E3] select-none pt-14 sm:pt-20 md:pt-28 lg:pt-32">
       {/* ==================================================================== */}
-      {/* 1. DEDICATED SACRED HANUMAN CHALISA CENTERPIECE                      */}
+      {/* 1. DEDICATED SACRED HANUMAN CENTERPIECE & SHLOKA                     */}
       {/* Sits comfortably in footer space, zero collision with above section  */}
       {/* ==================================================================== */}
-      <div className="w-full flex justify-center items-end px-2 sm:px-4 relative z-20">
-        <HanumanCenterpiece />
+      <div className="w-full relative z-20">
+        {/* Sacred Shloka on the footer: Centered on mobile, absolute top-left on tablet/desktop */}
+        <div className="relative sm:absolute sm:left-8 md:left-12 lg:left-16 xl:left-24 sm:top-6 md:top-8 lg:top-12 xl:top-14 z-30 pointer-events-none select-none text-center sm:text-left mx-auto sm:mx-0 mb-3 sm:mb-0 w-max max-w-[90vw] sm:max-w-[380px] md:max-w-[450px] lg:max-w-[520px]">
+          <p
+            className="font-serif font-bold text-[#742C25] text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-[26px] leading-relaxed tracking-wide drop-shadow-xs"
+            style={{ fontFamily: "'Noto Serif Kannada', 'Tiro Kannada', 'Georgia', serif" }}
+          >
+            “ಯತೋ ಧರ್ಮಃ ತತೋ ಹನುಮಾನ್ ।<br />
+            ಯತಃ ಹನುಮಾನ್ ತತೋ ಜಯ ॥”
+          </p>
+        </div>
+
+        {/* Centerpiece with Hanuman & full circular Rama mandala */}
+        <div className="w-full flex justify-center items-end px-2 sm:px-4">
+          <HanumanCenterpiece />
+        </div>
       </div>
 
       {/* ==================================================================== */}
       {/* 2. TOP SILHOUETTE BORDER                                             */}
       {/* Directly attached to the base of the rock in HanumanCenterpiece       */}
       {/* ==================================================================== */}
-      <div className="w-full overflow-hidden leading-none -mt-[72px] sm:-mt-[100px] md:-mt-[130px] lg:-mt-[172px] xl:-mt-[177px] -mb-1 pointer-events-none select-none relative z-10">
+      <div className="w-full overflow-hidden leading-none -mt-[78px] sm:-mt-[108px] md:-mt-[138px] lg:-mt-[182px] xl:-mt-[210px] -mb-1 pointer-events-none select-none relative z-10">
         <svg
           viewBox="0 240 2047 487"
           className="w-full h-20 sm:h-28 md:h-36 lg:h-48 xl:h-56 block fill-[#742C25]"
@@ -161,7 +184,7 @@ export default function Footer({ langIndex = 0, onOpenPrivacy }) {
       {/* ==================================================================== */}
       {/* 3. MAIN FOOTER BODY (Unified with top silhouette, no shadow/seam)    */}
       {/* ==================================================================== */}
-      <div className="w-full bg-[#742C25] text-[#FFF9EE] pt-3 sm:pt-4 pb-4 sm:pb-5 px-4 sm:px-6 lg:px-12 relative z-10">
+      <div className="w-full bg-[#742C25] text-[#FFF9EE] pt-3 sm:pt-4 pb-4 sm:pb-5 px-4 sm:px-6 lg:px-12 relative z-20">
         <div className="max-w-7xl mx-auto">
           {/* 3 Columns Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-0 items-start">
@@ -207,8 +230,8 @@ export default function Footer({ langIndex = 0, onOpenPrivacy }) {
 
               {!isSubmitted ? (
                 <form onSubmit={handleSubmit} className="space-y-2">
-                  {/* Row 1: Full Name and Number side-by-side in smaller size */}
-                  <div className="grid grid-cols-2 gap-2">
+                  {/* Row 1: Full Name and Number side-by-side on sm+, stacked on small screens */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <input
                       type="text"
                       name="name"
@@ -290,7 +313,7 @@ export default function Footer({ langIndex = 0, onOpenPrivacy }) {
                       <li key={index}>
                         <a
                           href={item.href}
-                          onClick={(e) => handleNavClick(e, item.href)}
+                          onClick={(e) => handleNavClick(e, item.href, item.targetId)}
                           className="hover:text-[#C79A45] transition-colors inline-block"
                         >
                           {item.label[lang] || item.label[1] || 'Home'}

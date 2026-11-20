@@ -75,15 +75,15 @@ export default function About({ langIndex = 0 }) {
       className="relative w-full h-[220vh] bg-[#F7F0E3] select-none"
     >
       {/* Sticky Pinned Viewport: stays fixed until ink reveal completes */}
-      <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center px-6 sm:px-10 lg:px-16">
-        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+      <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center px-4 sm:px-8 lg:px-16 py-4">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 lg:gap-14 items-center">
           {/* ========================================================== */}
           {/* LEFT SIDE: Images without border, identical size & position */}
           {/* Outline (about1.png) on base, Color (about2.png) revealed   */}
           {/* through organic top-down ink mask while section is pinned   */}
           {/* ========================================================== */}
           <div className="lg:col-span-6 flex items-center justify-center">
-            <div className="w-full max-w-[360px] sm:max-w-[420px] md:max-w-[460px] lg:max-w-[500px] max-h-[75vh] aspect-[1145/1374] select-none flex items-center justify-center">
+            <div className="w-full max-w-[200px] xs:max-w-[240px] sm:max-w-[340px] md:max-w-[420px] lg:max-w-[500px] max-h-[30vh] sm:max-h-[42vh] lg:max-h-[75vh] aspect-[1145/1374] select-none flex items-center justify-center">
             <svg
               viewBox="0 0 1145 1374"
               className="w-full h-full block filter drop-shadow-xl overflow-visible select-none"
@@ -173,19 +173,19 @@ export default function About({ langIndex = 0 }) {
         {/* RIGHT SIDE: Clean Info directly on screen (NO card/border) */}
         {/* Smaller heading, subtitle, and verbatim description text   */}
         {/* ========================================================== */}
-        <div className="lg:col-span-6 flex flex-col justify-center text-left">
-          {/* Temple Name Heading (Smaller) */}
-          <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#742C25] leading-snug mb-2">
+        <div className="lg:col-span-6 flex flex-col justify-center text-center lg:text-left">
+          {/* Temple Name Heading */}
+          <h2 className="font-serif text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#742C25] leading-snug mb-1 sm:mb-2">
             {currentData.title}
           </h2>
 
           {/* Subtitle */}
-          <p className="font-serif text-xs sm:text-sm text-[#C79A45] font-semibold tracking-wide mb-5">
+          <p className="font-serif text-[11px] sm:text-xs md:text-sm text-[#C79A45] font-semibold tracking-wide mb-2 sm:mb-4 lg:mb-5">
             {currentData.subtitle}
           </p>
 
           {/* Temple Info Description: Cleanly displayed on screen without card or border */}
-          <p className="font-serif text-sm sm:text-base text-[#3A2E28] leading-relaxed max-w-xl">
+          <p className="font-serif text-xs sm:text-sm md:text-base text-[#3A2E28] leading-relaxed max-w-xl mx-auto lg:mx-0">
             {currentData.description}
           </p>
         </div>

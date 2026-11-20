@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Menu, X } from 'lucide-react';
 import { LOGO_PATH } from '../../assets/logoData';
 
 // Register GSAP plugins safely
@@ -97,6 +98,7 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
   // State: active nav item and internal fallback language index
   const [activeNav, setActiveNav] = useState('Home');
   const [internalLang, setInternalLang] = useState(langIndex);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Current active language (prefer parent prop if provided)
   const currentLang = setLangIndex !== undefined ? langIndex : internalLang;
@@ -114,6 +116,9 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
   // Scroll back to top
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+      window.history.pushState(null, '', '/');
+    }
   };
 
   // Scroll directly to the About section
@@ -122,6 +127,9 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
     const aboutEl = document.getElementById('about');
     if (aboutEl) {
       aboutEl.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (typeof window !== 'undefined' && window.location.pathname !== '/about') {
+      window.history.pushState(null, '', '/about');
     }
   };
 
@@ -132,6 +140,9 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
     if (poojasEl) {
       poojasEl.scrollIntoView({ behavior: 'smooth' });
     }
+    if (typeof window !== 'undefined' && window.location.pathname !== '/poojas') {
+      window.history.pushState(null, '', '/poojas');
+    }
   };
 
   // Scroll to Poorna Phala
@@ -140,6 +151,9 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
     const poornaphalaEl = document.getElementById('poornaphala');
     if (poornaphalaEl) {
       poornaphalaEl.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (typeof window !== 'undefined' && window.location.pathname !== '/poornaphala') {
+      window.history.pushState(null, '', '/poornaphala');
     }
   };
 
@@ -267,10 +281,18 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
     if (!containerRef.current || !stageRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Calculate responsive vertical travel distance from center (H/2) to top navbar center (40px)
+      // Calculate responsive vertical travel distance from center (H/2) to top navbar center
       const computeDistance = () => {
         const h = window.innerHeight;
-        return -(h / 2 - 40);
+        const navCenter = window.innerWidth < 640 ? 32 : 40;
+        return -(h / 2 - navCenter);
+      };
+
+      const computeScale = () => {
+        if (window.innerWidth < 480) return 0.24;
+        if (window.innerWidth < 640) return 0.28;
+        if (window.innerWidth < 1024) return 0.34;
+        return 0.38;
       };
 
       let travelY = computeDistance();
@@ -299,7 +321,7 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
         logoWrapperRef.current,
         {
           y: () => travelY,
-          scale: 0.38, // Visible and prominent size on top (~160px wide)
+          scale: () => computeScale(),
           duration: 0.4,
           ease: 'power2.inOut',
         },
@@ -452,22 +474,22 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
         {/* ============================================================ */}
         {/* TOP NAVBAR CONTAINER (Fixed Header Structure)                */}
         {/* ============================================================ */}
-        <header className="relative w-full z-40 h-20 px-6 sm:px-10 lg:px-14 flex items-center justify-between pointer-events-none">
+        <header className="relative w-full z-40 h-16 sm:h-20 px-3 sm:px-8 lg:px-14 flex items-center justify-between pointer-events-none">
           {/* Left Corner: App Name "ಯತ್ನ" / "Yatna" / "यत्न" based on active language */}
           <div
             ref={appNameRef}
             onClick={scrollToTop}
             className="flex items-center opacity-0 pointer-events-auto cursor-pointer z-10"
           >
-            <span className="font-logo text-2xl sm:text-3xl font-bold tracking-wider text-[#FFF9EE] drop-shadow-sm hover:text-[#C79A45] transition-colors">
+            <span className="font-logo text-xl sm:text-2xl md:text-3xl font-bold tracking-wider text-[#FFF9EE] drop-shadow-sm hover:text-[#C79A45] transition-colors">
               {['ಯತ್ನ', 'Yatna', 'यत्न'][currentLang] || 'ಯತ್ನ'}
             </span>
           </div>
 
-          {/* Symmetrical Centered Navigation System */}
+          {/* Symmetrical Centered Navigation System (Desktop md+ only) */}
           {/* Left Wing and Right Wing have identical flex:1 so the center logo is mathematically at 50% */}
           {/* Equal gap on both sides: Distance(About, Logo) == Distance(Logo, Poojas) */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-6 sm:px-10 lg:px-14">
+          <div className="hidden md:flex absolute inset-0 items-center justify-center pointer-events-none px-6 lg:px-14">
             {/* Left Wing (Home, About) - flex-1, right-aligned with symmetric padding */}
             <nav
               ref={leftNavRef}
@@ -502,7 +524,7 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
 
             {/* Center Logo Slot: Dead center of header at 50%, with equal spacing on both sides */}
             <div
-              className="w-40 sm:w-44 md:w-48 h-10 flex items-center justify-center flex-shrink-0 cursor-pointer pointer-events-auto"
+              className="w-32 md:w-44 h-8 sm:h-10 flex items-center justify-center flex-shrink-0 cursor-pointer pointer-events-auto"
               onClick={scrollToTop}
               title="Return to top"
             />
@@ -537,21 +559,154 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
             </nav>
           </div>
 
-          {/* Right Corner: Smaller Language Switcher (No dropdown, no border, no bg) */}
+          {/* Right Corner: Desktop Language Switcher & Mobile Menu Icon */}
           <div
             ref={langTextRef}
-            className="flex items-center opacity-0 pointer-events-auto z-10"
+            className="flex items-center opacity-0 pointer-events-auto z-50"
           >
+            {/* Desktop Language Switcher (Single-click cycling) */}
             <button
               type="button"
               onClick={cycleLanguage}
               title="Click to change language"
-              className="font-serif text-xs sm:text-sm text-[#FFF9EE] hover:text-[#C79A45] transition-colors cursor-pointer select-none bg-transparent border-0 p-0 tracking-wide font-medium"
+              className="hidden md:inline-block font-serif text-xs sm:text-sm text-[#FFF9EE] hover:text-[#C79A45] transition-colors cursor-pointer select-none bg-transparent border-0 p-0 tracking-wide font-medium"
             >
               {LANGUAGES[currentLang]}
             </button>
+
+            {/* Mobile Menu Icon (Right side top on mobile) */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              aria-label="Toggle navigation menu"
+              className="md:hidden w-9 h-9 flex items-center justify-center text-[#FFF9EE] hover:text-[#C79A45] transition-colors cursor-pointer rounded-lg bg-black/25 backdrop-blur-xs border border-[#FFF9EE]/20 active:scale-95"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5 text-[#C79A45]" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </header>
+
+        {/* Mobile Navigation Drawer Overlay */}
+        {mobileMenuOpen && (
+          <div
+            className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md md:hidden flex flex-col pt-16 px-4 pb-8"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <div
+              className="w-full bg-[#742C25] border border-[#C79A45]/40 rounded-2xl p-5 shadow-2xl flex flex-col space-y-5 animate-in slide-in-from-top-6 duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header inside Drawer with Close */}
+              <div className="flex items-center justify-between border-b border-[#FFF9EE]/15 pb-3">
+                <span className="font-logo text-xl font-bold text-[#FFF9EE]">
+                  {['ಯತ್ನ', 'Yatna', 'यत्न'][currentLang] || 'ಯತ್ನ'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-[#FFF9EE]"
+                >
+                  <X className="w-4 h-4 text-[#C79A45]" />
+                </button>
+              </div>
+
+              {/* Navigation Links */}
+              <nav className="flex flex-col space-y-2 font-serif">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveNav('Home');
+                    scrollToTop();
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`text-left text-base py-2.5 px-3 rounded-lg flex items-center justify-between transition-colors ${
+                    activeNav === 'Home'
+                      ? 'bg-[#C79A45]/20 text-[#C79A45] font-bold'
+                      : 'text-[#FFF9EE] hover:bg-black/15'
+                  }`}
+                >
+                  <span>Home</span>
+                  <span className="text-xs text-[#C79A45]">✦</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveNav('About');
+                    scrollToAbout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`text-left text-base py-2.5 px-3 rounded-lg flex items-center justify-between transition-colors ${
+                    activeNav === 'About'
+                      ? 'bg-[#C79A45]/20 text-[#C79A45] font-bold'
+                      : 'text-[#FFF9EE] hover:bg-black/15'
+                  }`}
+                >
+                  <span>About</span>
+                  <span className="text-xs text-[#C79A45]">✦</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveNav('Poojas');
+                    scrollToPoojas();
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`text-left text-base py-2.5 px-3 rounded-lg flex items-center justify-between transition-colors ${
+                    activeNav === 'Poojas'
+                      ? 'bg-[#C79A45]/20 text-[#C79A45] font-bold'
+                      : 'text-[#FFF9EE] hover:bg-black/15'
+                  }`}
+                >
+                  <span>Poojas & Sevas</span>
+                  <span className="text-xs text-[#C79A45]">✦</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveNav('Poornaphala');
+                    scrollToPoornaphala();
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`text-left text-base py-2.5 px-3 rounded-lg flex items-center justify-between transition-colors ${
+                    activeNav === 'Poornaphala'
+                      ? 'bg-[#C79A45]/20 text-[#C79A45] font-bold'
+                      : 'text-[#FFF9EE] hover:bg-black/15'
+                  }`}
+                >
+                  <span>Poornaphala</span>
+                  <span className="text-xs text-[#C79A45]">✦</span>
+                </button>
+              </nav>
+
+              {/* Language selection inside drawer */}
+              <div className="pt-2 border-t border-[#FFF9EE]/15">
+                <p className="text-[11px] font-serif text-[#FFF9EE]/60 mb-2 uppercase tracking-wider">
+                  Language / ಭಾಷೆ
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {LANGUAGES.map((lang, idx) => (
+                    <button
+                      key={lang}
+                      type="button"
+                      onClick={() => {
+                        if (setLangIndex) setLangIndex(idx);
+                        setInternalLang(idx);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`py-2 px-1 text-center font-serif text-xs rounded-lg transition-all ${
+                        currentLang === idx
+                          ? 'bg-[#C79A45] text-[#30251F] font-bold shadow-md'
+                          : 'bg-black/25 text-[#FFF9EE] hover:bg-black/40 border border-[#FFF9EE]/10'
+                      }`}
+                    >
+                      {lang}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ============================================================ */}
         {/* CENTER SCROLL-DRIVEN LOGO                                    */}
@@ -567,7 +722,7 @@ export default function Hero({ langIndex = 0, setLangIndex }) {
         >
           <div
             ref={logoWrapperRef}
-            className="w-[380px] sm:w-[420px] h-[85px] sm:h-[95px] flex items-center justify-center origin-center pointer-events-auto cursor-pointer"
+            className="w-[280px] xs:w-[320px] sm:w-[380px] md:w-[420px] h-[65px] xs:h-[75px] sm:h-[85px] md:h-[95px] flex items-center justify-center origin-center pointer-events-auto cursor-pointer px-4 sm:px-0"
             onClick={scrollToTop}
           >
             <div

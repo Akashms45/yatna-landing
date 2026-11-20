@@ -170,7 +170,7 @@ export default function Poornaphala({ langIndex = 0 }) {
     <section
       id="poornaphala"
       ref={sectionRef}
-      className="relative w-full min-h-screen bg-[#F7F0E3] select-none text-[#30251F] py-8 sm:py-12 lg:py-14 px-6 sm:px-10 lg:px-16 overflow-hidden flex items-center"
+      className="relative w-full min-h-screen bg-[#F7F0E3] select-none text-[#30251F] py-8 sm:py-12 lg:py-14 px-4 sm:px-8 lg:px-16 overflow-hidden flex items-center"
     >
       {/* =================================================================== */}
       {/* BACKGROUND SACRED THREAD: Anchored to the bottom, flush left        */}
@@ -187,7 +187,7 @@ export default function Poornaphala({ langIndex = 0 }) {
         />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 lg:gap-14 items-center">
         {/* ================================================================ */}
         {/* LEFT COLUMN: EXPLANATION / 5 POINTS                              */}
         {/* ================================================================ */}
@@ -205,7 +205,7 @@ export default function Poornaphala({ langIndex = 0 }) {
             </p>
 
             {/* Introductory Paragraph (Below heading, above the points) */}
-            <p className="font-serif text-sm sm:text-base text-[#3A2E28] leading-relaxed mb-6 sm:mb-7 max-w-xl">
+            <p className="font-serif text-xs sm:text-sm md:text-base text-[#3A2E28] leading-relaxed mb-5 sm:mb-7 max-w-xl">
               {data.intro}
             </p>
 
@@ -214,7 +214,7 @@ export default function Poornaphala({ langIndex = 0 }) {
               {data.steps.map((step) => (
                 <div
                   key={step.number}
-                  className="flex items-start gap-4 transition-transform duration-200"
+                  className="flex items-start gap-3 sm:gap-4 transition-transform duration-200"
                 >
                   <span className="font-serif text-lg sm:text-xl font-bold text-[#C79A45] leading-tight flex-shrink-0 pt-0.5">
                     {step.number}
@@ -241,7 +241,7 @@ export default function Poornaphala({ langIndex = 0 }) {
           ref={imageRef}
           className="lg:col-span-6 flex items-center justify-center order-1 lg:order-2"
         >
-          <div className="w-full max-w-[460px] sm:max-w-[520px] lg:max-w-[580px] flex items-center justify-center">
+          <div className="w-full max-w-[240px] xs:max-w-[280px] sm:max-w-[380px] md:max-w-[460px] lg:max-w-[580px] flex items-center justify-center">
             <img
               src="/poornapala.png"
               alt="Poornaphala Seva - 16-Day Coconut Vow"

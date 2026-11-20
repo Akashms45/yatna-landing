@@ -7,19 +7,22 @@ import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// Plugin to duplicate index.html to privacy/index.html so Vercel can serve /privacy statically
+// Plugin to duplicate index.html to route directories so Vercel serves all sitemap routes statically
 function spaFallbackPlugin() {
   return {
     name: 'spa-fallback',
     closeBundle() {
       const distDir = path.resolve(__dirname, 'dist')
-      const privacyDir = path.resolve(distDir, 'privacy')
       const indexFile = path.resolve(distDir, 'index.html')
       if (fs.existsSync(indexFile)) {
-        if (!fs.existsSync(privacyDir)) {
-          fs.mkdirSync(privacyDir, { recursive: true })
+        const routes = ['privacy', 'about', 'poojas', 'poornaphala']
+        for (const route of routes) {
+          const routeDir = path.resolve(distDir, route)
+          if (!fs.existsSync(routeDir)) {
+            fs.mkdirSync(routeDir, { recursive: true })
+          }
+          fs.copyFileSync(indexFile, path.resolve(routeDir, 'index.html'))
         }
-        fs.copyFileSync(indexFile, path.resolve(privacyDir, 'index.html'))
       }
     },
   }

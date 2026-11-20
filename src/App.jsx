@@ -13,7 +13,7 @@ export default function App() {
   // 0: Kannada, 1: English, 2: Hindi
   const [langIndex, setLangIndex] = useState(0);
 
-  // Helper to determine if URL path or legacy hash indicates the privacy screen
+  // Helper to determine if URL path indicates the privacy screen
   const isPrivacyRoute = () => {
     if (typeof window === 'undefined') return false;
     const path = window.location.pathname.replace(/\/+$/, '');
@@ -26,31 +26,62 @@ export default function App() {
     return isPrivacyRoute() ? 'privacy' : 'landing';
   });
 
-  // Keep browser URL clean: ensure NO '#' exists in the URL, only '/' or '/privacy'
+  // Handle direct navigation and auto-scrolling to section from URL
+  const scrollToSection = (sectionId) => {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Keep browser URL clean: ensure NO '#' exists in the URL, only clean paths
   useEffect(() => {
-    // Clean initial URL on mount if it contains '#' or if navigating to /privacy
     if (typeof window !== 'undefined') {
+      const path = window.location.pathname.replace(/\/+$/, '') || '/';
       const isPrivacy = isPrivacyRoute();
-      const targetPath = isPrivacy ? '/privacy' : '/';
-      if (window.location.hash || (isPrivacy && window.location.pathname !== '/privacy')) {
-        window.history.replaceState(null, '', targetPath);
+
+      // If legacy hash was present, strip it
+      if (window.location.hash) {
+        const cleanPath = isPrivacy ? '/privacy' : (path || '/');
+        window.history.replaceState(null, '', cleanPath);
+      }
+
+      // If opening an in-page section directly (e.g. from Google Search), scroll smoothly to it
+      if (path === '/about') {
+        setTimeout(() => scrollToSection('about'), 400);
+      } else if (path === '/poojas') {
+        setTimeout(() => scrollToSection('poojas'), 400);
+      } else if (path === '/poornaphala') {
+        setTimeout(() => scrollToSection('poornaphala'), 400);
       }
     }
 
     // Handle browser Back / Forward buttons (popstate)
     const handlePopState = () => {
-      const isPrivacy = isPrivacyRoute();
+      const path = window.location.pathname.replace(/\/+$/, '') || '/';
+      const isPrivacy = path === '/privacy';
       setCurrentScreen(isPrivacy ? 'privacy' : 'landing');
       if (window.location.hash) {
-        window.history.replaceState(null, '', isPrivacy ? '/privacy' : '/');
+        window.history.replaceState(null, '', path);
+      }
+
+      if (!isPrivacy) {
+        if (path === '/about') {
+          setTimeout(() => scrollToSection('about'), 100);
+        } else if (path === '/poojas') {
+          setTimeout(() => scrollToSection('poojas'), 100);
+        } else if (path === '/poornaphala') {
+          setTimeout(() => scrollToSection('poornaphala'), 100);
+        } else if (path === '/') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       }
     };
 
     // If an accidental hashchange ever occurs, strip '#' immediately
     const handleHashChange = () => {
-      const isPrivacy = isPrivacyRoute();
-      setCurrentScreen(isPrivacy ? 'privacy' : 'landing');
-      window.history.replaceState(null, '', isPrivacy ? '/privacy' : '/');
+      const path = window.location.pathname.replace(/\/+$/, '') || '/';
+      window.history.replaceState(null, '', path);
     };
 
     window.addEventListener('popstate', handlePopState);

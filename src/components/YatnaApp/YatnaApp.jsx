@@ -284,7 +284,7 @@ export default function YatnaApp({ langIndex = 0 }) {
       {/* =================================================================== */}
       {/* 1. SECTION HEADER: Brand Font & Generous Space After Description    */}
       {/* =================================================================== */}
-      <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 lg:mb-20 px-4">
+      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-14 lg:mb-20 px-2 sm:px-4">
         <div className="inline-flex items-center justify-center gap-3 sm:gap-4 mb-1.5">
           {/* Left doodle burst rays (\ | /) */}
           {/* <svg
@@ -332,30 +332,34 @@ export default function YatnaApp({ langIndex = 0 }) {
       <div className="w-full max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch gap-6 lg:gap-2 xl:gap-4">
           {/* --------------------------------------------------------------- */}
-          {/* LEFT 3 FEATURES: Arrows centered between heading & description  */}
+          {/* LEFT 3 FEATURES: Arrows on desktop, clean points on mobile      */}
           {/* --------------------------------------------------------------- */}
           <div
             ref={leftColRef}
-            className="lg:col-span-3 xl:col-span-3 flex flex-col justify-between py-1 lg:py-2 space-y-6 lg:space-y-0 order-2 lg:order-1"
+            className="lg:col-span-3 xl:col-span-3 flex flex-col justify-between py-1 lg:py-2 space-y-4 sm:space-y-6 lg:space-y-0 order-2 lg:order-1"
           >
             {/* Left 1: Top-Left (Indented inward toward Sadhana Calendar) */}
             <div
               className={`relative flex flex-col items-start lg:items-end text-left lg:text-right ${leftFeatures[0].posClass} transition-transform duration-200`}
             >
-              <div className="relative max-w-[260px] xl:max-w-[280px]">
-                <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
-                  {leftFeatures[0].title[langIndex]}
-                </h3>
-                <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-1">
-                  {leftFeatures[0].desc[langIndex]}
-                </p>
-
-                {/* Arrow centered between heading & desc at the END of the point */}
-                <div className="hidden lg:block absolute left-full top-1/2 -translate-y-1/2 ml-3 xl:ml-4 pointer-events-none">
-                  <ArrowLeftTop />
+              <div className="relative w-full max-w-full sm:max-w-[260px] xl:max-w-[280px]">
+                {/* On mobile: clean point with gold bullet, zero arrows */}
+                <div className="flex items-start gap-2.5 lg:block">
+                  <span className="lg:hidden text-[#C79A45] font-serif font-bold text-sm select-none shrink-0 pt-0.5" aria-hidden="true">
+                    ✦
+                  </span>
+                  <div>
+                    <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
+                      {leftFeatures[0].title[langIndex]}
+                    </h3>
+                    <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-0.5">
+                      {leftFeatures[0].desc[langIndex]}
+                    </p>
+                  </div>
                 </div>
-                {/* Mobile fallback arrow */}
-                <div className="flex items-center gap-2 lg:hidden mt-1.5">
+
+                {/* Arrow centered between heading & desc at the END of the point (Desktop only) */}
+                <div className="hidden lg:block absolute left-full top-1/2 -translate-y-1/2 ml-3 xl:ml-4 pointer-events-none">
                   <ArrowLeftTop />
                 </div>
               </div>
@@ -365,20 +369,24 @@ export default function YatnaApp({ langIndex = 0 }) {
             <div
               className={`relative flex flex-col items-start text-left ${leftFeatures[1].posClass} transition-transform duration-200`}
             >
-              <div className="relative max-w-[250px] xl:max-w-[270px]">
-                <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
-                  {leftFeatures[1].title[langIndex]}
-                </h3>
-                <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-1">
-                  {leftFeatures[1].desc[langIndex]}
-                </p>
-
-                {/* Arrow centered between heading & desc at the END of the point */}
-                <div className="hidden lg:block absolute left-full top-1/2 -translate-y-1/2 ml-3 xl:ml-4 pointer-events-none">
-                  <ArrowLeftMid />
+              <div className="relative w-full max-w-full sm:max-w-[250px] xl:max-w-[270px]">
+                {/* On mobile: clean point with gold bullet, zero arrows */}
+                <div className="flex items-start gap-2.5 lg:block">
+                  <span className="lg:hidden text-[#C79A45] font-serif font-bold text-sm select-none shrink-0 pt-0.5" aria-hidden="true">
+                    ✦
+                  </span>
+                  <div>
+                    <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
+                      {leftFeatures[1].title[langIndex]}
+                    </h3>
+                    <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-0.5">
+                      {leftFeatures[1].desc[langIndex]}
+                    </p>
+                  </div>
                 </div>
-                {/* Mobile fallback arrow */}
-                <div className="flex items-center gap-2 lg:hidden mt-1.5">
+
+                {/* Arrow centered between heading & desc at the END of the point (Desktop only) */}
+                <div className="hidden lg:block absolute left-full top-1/2 -translate-y-1/2 ml-3 xl:ml-4 pointer-events-none">
                   <ArrowLeftMid />
                 </div>
               </div>
@@ -388,20 +396,24 @@ export default function YatnaApp({ langIndex = 0 }) {
             <div
               className={`relative flex flex-col items-start lg:items-end text-left lg:text-right ${leftFeatures[2].posClass} transition-transform duration-200`}
             >
-              <div className="relative max-w-[260px] xl:max-w-[280px]">
-                <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
-                  {leftFeatures[2].title[langIndex]}
-                </h3>
-                <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-1">
-                  {leftFeatures[2].desc[langIndex]}
-                </p>
-
-                {/* Arrow centered between heading & desc at the END of the point */}
-                <div className="hidden lg:block absolute left-full top-1/2 -translate-y-1/2 ml-3 xl:ml-4 pointer-events-none">
-                  <ArrowLeftBottom />
+              <div className="relative w-full max-w-full sm:max-w-[260px] xl:max-w-[280px]">
+                {/* On mobile: clean point with gold bullet, zero arrows */}
+                <div className="flex items-start gap-2.5 lg:block">
+                  <span className="lg:hidden text-[#C79A45] font-serif font-bold text-sm select-none shrink-0 pt-0.5" aria-hidden="true">
+                    ✦
+                  </span>
+                  <div>
+                    <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
+                      {leftFeatures[2].title[langIndex]}
+                    </h3>
+                    <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-0.5">
+                      {leftFeatures[2].desc[langIndex]}
+                    </p>
+                  </div>
                 </div>
-                {/* Mobile fallback arrow */}
-                <div className="flex items-center gap-2 lg:hidden mt-1.5">
+
+                {/* Arrow centered between heading & desc at the END of the point (Desktop only) */}
+                <div className="hidden lg:block absolute left-full top-1/2 -translate-y-1/2 ml-3 xl:ml-4 pointer-events-none">
                   <ArrowLeftBottom />
                 </div>
               </div>
@@ -415,7 +427,7 @@ export default function YatnaApp({ langIndex = 0 }) {
             ref={centerImgRef}
             className="lg:col-span-6 xl:col-span-6 flex items-center justify-center order-1 lg:order-2 px-2"
           >
-            <div className="w-full max-w-[440px] sm:max-w-[500px] md:max-w-[550px] lg:max-w-[580px] xl:max-w-[620px]">
+            <div className="w-full max-w-[260px] xs:max-w-[320px] sm:max-w-[420px] md:max-w-[520px] lg:max-w-[580px] xl:max-w-[620px]">
               <img
                 src="/yatnaapp.png"
                 alt="Yatna Mobile App Mockup"
@@ -426,32 +438,35 @@ export default function YatnaApp({ langIndex = 0 }) {
           </div>
 
           {/* --------------------------------------------------------------- */}
-          {/* RIGHT 3 FEATURES: Arrows centered between heading & description */}
+          {/* RIGHT 3 FEATURES: Arrows on desktop, clean points on mobile     */}
           {/* --------------------------------------------------------------- */}
           <div
             ref={rightColRef}
-            className="lg:col-span-3 xl:col-span-3 flex flex-col justify-between py-1 lg:py-2 space-y-6 lg:space-y-0 text-left order-3"
+            className="lg:col-span-3 xl:col-span-3 flex flex-col justify-between py-1 lg:py-2 space-y-4 sm:space-y-6 lg:space-y-0 text-left order-3"
           >
             {/* Right 1: Top-Right (Indented inward toward Mantra Counter) */}
             <div
               className={`relative flex flex-col items-start ${rightFeatures[0].posClass} transition-transform duration-200`}
             >
-              <div className="relative max-w-[260px] xl:max-w-[280px]">
-                {/* Arrow centered between heading & desc at the STARTING of the point */}
+              <div className="relative w-full max-w-full sm:max-w-[260px] xl:max-w-[280px]">
+                {/* Arrow centered between heading & desc at the STARTING of the point (Desktop only) */}
                 <div className="hidden lg:block absolute right-full top-1/2 -translate-y-1/2 mr-3.5 xl:mr-5 pointer-events-none">
                   <ArrowRightTop />
                 </div>
 
-                <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
-                  {rightFeatures[0].title[langIndex]}
-                </h3>
-                <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-1">
-                  {rightFeatures[0].desc[langIndex]}
-                </p>
-
-                {/* Mobile fallback arrow */}
-                <div className="flex items-center gap-2 lg:hidden mt-1.5">
-                  <ArrowRightTop />
+                {/* On mobile: clean point with gold bullet, zero arrows */}
+                <div className="flex items-start gap-2.5 lg:block">
+                  <span className="lg:hidden text-[#C79A45] font-serif font-bold text-sm select-none shrink-0 pt-0.5" aria-hidden="true">
+                    ✦
+                  </span>
+                  <div>
+                    <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
+                      {rightFeatures[0].title[langIndex]}
+                    </h3>
+                    <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-0.5">
+                      {rightFeatures[0].desc[langIndex]}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -460,22 +475,25 @@ export default function YatnaApp({ langIndex = 0 }) {
             <div
               className={`relative flex flex-col items-start ${rightFeatures[1].posClass} transition-transform duration-200`}
             >
-              <div className="relative max-w-[250px] xl:max-w-[270px]">
-                {/* Arrow centered between heading & desc at the STARTING of the point */}
+              <div className="relative w-full max-w-full sm:max-w-[250px] xl:max-w-[270px]">
+                {/* Arrow centered between heading & desc at the STARTING of the point (Desktop only) */}
                 <div className="hidden lg:block absolute right-full top-1/2 -translate-y-1/2 mr-3.5 xl:mr-5 pointer-events-none">
                   <ArrowRightMid />
                 </div>
 
-                <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
-                  {rightFeatures[1].title[langIndex]}
-                </h3>
-                <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-1">
-                  {rightFeatures[1].desc[langIndex]}
-                </p>
-
-                {/* Mobile fallback arrow */}
-                <div className="flex items-center gap-2 lg:hidden mt-1.5">
-                  <ArrowRightMid />
+                {/* On mobile: clean point with gold bullet, zero arrows */}
+                <div className="flex items-start gap-2.5 lg:block">
+                  <span className="lg:hidden text-[#C79A45] font-serif font-bold text-sm select-none shrink-0 pt-0.5" aria-hidden="true">
+                    ✦
+                  </span>
+                  <div>
+                    <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
+                      {rightFeatures[1].title[langIndex]}
+                    </h3>
+                    <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-0.5">
+                      {rightFeatures[1].desc[langIndex]}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -484,22 +502,25 @@ export default function YatnaApp({ langIndex = 0 }) {
             <div
               className={`relative flex flex-col items-start ${rightFeatures[2].posClass} transition-transform duration-200`}
             >
-              <div className="relative max-w-[260px] xl:max-w-[280px]">
-                {/* Arrow centered between heading & desc at the STARTING of the point */}
+              <div className="relative w-full max-w-full sm:max-w-[260px] xl:max-w-[280px]">
+                {/* Arrow centered between heading & desc at the STARTING of the point (Desktop only) */}
                 <div className="hidden lg:block absolute right-full top-1/2 -translate-y-1/2 mr-3.5 xl:mr-5 pointer-events-none">
                   <ArrowRightBottom />
                 </div>
 
-                <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
-                  {rightFeatures[2].title[langIndex]}
-                </h3>
-                <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-1">
-                  {rightFeatures[2].desc[langIndex]}
-                </p>
-
-                {/* Mobile fallback arrow */}
-                <div className="flex items-center gap-2 lg:hidden mt-1.5">
-                  <ArrowRightBottom />
+                {/* On mobile: clean point with gold bullet, zero arrows */}
+                <div className="flex items-start gap-2.5 lg:block">
+                  <span className="lg:hidden text-[#C79A45] font-serif font-bold text-sm select-none shrink-0 pt-0.5" aria-hidden="true">
+                    ✦
+                  </span>
+                  <div>
+                    <h3 className="font-serif text-sm sm:text-base font-bold text-[#742C25] leading-snug">
+                      {rightFeatures[2].title[langIndex]}
+                    </h3>
+                    <p className="font-serif text-xs text-[#30251F] leading-relaxed mt-0.5">
+                      {rightFeatures[2].desc[langIndex]}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
