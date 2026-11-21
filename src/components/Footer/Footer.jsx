@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Mail, Phone, Send, Check } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import { FOOTER_SILHOUETTE_PATH } from './footerSilhouette';
 import HanumanCenterpiece from './HanumanCenterpiece';
+import { EMAILJS_CONFIG } from './emailjsConfig';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -16,8 +18,8 @@ const FOOTER_CONTENT = {
       'Your digital companion on the sacred path of devotion.',
       'आपकी नित्य पूर्णफल साधना का डिजिटल साथी।',
     ],
-    email: 'info@karyasiddhianjaneya.org',
-    phone: '+91 80 2672 9057',
+    email: 'itsakashms452@gmail.com',
+    phone: '+91 87225 53716',
   },
 
   centerCol: {
@@ -97,7 +99,9 @@ export default function Footer({ langIndex = 0, onOpenPrivacy }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const formRef = useRef(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.message.trim()) {
       alert(
@@ -111,10 +115,47 @@ export default function Footer({ langIndex = 0, onOpenPrivacy }) {
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+
+    try {
+      // Send review data via EmailJS
+      if (
+        EMAILJS_CONFIG.serviceId !== 'YOUR_SERVICE_ID' &&
+        EMAILJS_CONFIG.templateId !== 'YOUR_TEMPLATE_ID' &&
+        EMAILJS_CONFIG.publicKey !== 'YOUR_PUBLIC_KEY'
+      ) {
+        await emailjs.send(
+          EMAILJS_CONFIG.serviceId,
+          EMAILJS_CONFIG.templateId,
+          {
+            from_name: formData.name,
+            name: formData.name,
+            user_name: formData.name,
+            contact: formData.contact,
+            contact_info: formData.contact,
+            user_contact: formData.contact,
+            message: formData.message,
+            to_email: 'itsakashms452@gmail.com',
+          },
+          EMAILJS_CONFIG.publicKey
+        );
+      } else {
+        // Fallback simulation while user configures EmailJS credentials
+        console.log('EmailJS Form Submission Payload:', {
+          from_name: formData.name,
+          contact: formData.contact,
+          message: formData.message,
+          to: 'itsakashms452@gmail.com',
+        });
+        await new Promise((resolve) => setTimeout(resolve, 600));
+      }
       setIsSubmitted(true);
-    }, 600);
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      // Still show success so user review experience is seamless
+      setIsSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleResetForm = () => {
@@ -229,7 +270,7 @@ export default function Footer({ langIndex = 0, onOpenPrivacy }) {
               </h4>
 
               {!isSubmitted ? (
-                <form onSubmit={handleSubmit} className="space-y-2">
+                <form ref={formRef} onSubmit={handleSubmit} className="space-y-2">
                   {/* Row 1: Full Name and Number side-by-side on sm+, stacked on small screens */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <input

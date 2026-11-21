@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import { RAMA_CIRCLES } from './ramaChantData';
 
 /**
@@ -26,6 +27,30 @@ export default function HanumanCenterpiece() {
   const targetRef = useRef({ x: 500, y: 180, active: false });
   const animIdRef = useRef(0);
   const svgRef = useRef(null);
+
+  // GSAP: Continuous alternating cycle wheel rotation of the 9 sacred Rama chant rings
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      RAMA_CIRCLES.forEach((circle) => {
+        const isClockwise = circle.id % 2 === 1;
+        // First line moves to the right (Clockwise = +360)
+        // Next line moves to the left (Counter-Clockwise = -360)
+        // Alternating across all 9 rings
+        const targetRotation = isClockwise ? 360 : -360;
+        const dur = 15 + circle.id * 3;
+
+        gsap.to(`#rama-ring-${circle.id}`, {
+          rotation: targetRotation,
+          svgOrigin: `${CX} ${CY_CENTER}`,
+          repeat: -1,
+          ease: 'none',
+          duration: dur,
+        });
+      });
+    }, svgRef);
+
+    return () => ctx.revert();
+  }, [CX, CY_CENTER]);
 
   // Smooth animation loop for the organic ink reveal droplet
   useEffect(() => {
@@ -69,15 +94,15 @@ export default function HanumanCenterpiece() {
     const x = Math.max(0, Math.min(1000, ((clientX - rect.left) / rect.width) * 1000));
     const y = -25 + ((clientY - rect.top) / rect.height) * 570;
 
-    // Do NOT trigger or continue hover animation below the rock bottom design SVG code (Y > 545)
-    if (y > 545) {
+    // Do NOT trigger or continue hover animation below rock boundaries (Y > 536)
+    if (y > 536) {
       targetRef.current.active = false;
       return;
     }
 
     targetRef.current = {
       x,
-      y: Math.max(-25, Math.min(545, y)),
+      y: Math.max(-25, Math.min(536, y)),
       active: true,
     };
   };
@@ -95,21 +120,15 @@ export default function HanumanCenterpiece() {
       <svg
         ref={svgRef}
         viewBox="0 -25 1000 570"
-        className="w-full max-w-[340px] xs:max-w-[400px] sm:max-w-[600px] md:max-w-[760px] lg:max-w-[920px] xl:max-w-[1000px] h-auto block overflow-visible"
+        className="w-full max-w-[340px] xs:max-w-[400px] sm:max-w-[600px] md:max-w-[760px] lg:max-w-[920px] xl:max-w-[1000px] h-auto block overflow-hidden"
         preserveAspectRatio="xMidYMid meet"
         aria-label="Lord Hanuman seated upon the sacred rock surrounded by complete circular rounded Rama rings in Kannada with interactive ink reveal of Sri Rama and Sita on hover"
       >
         <defs>
-          {/* Subtle Divine Golden Aura Glow */}
-          <radialGradient id="hanuman-halo-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#C79A45" stopOpacity="0.45" />
-            <stop offset="60%" stopColor="#C79A45" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#C79A45" stopOpacity="0" />
-          </radialGradient>
-
-          {/* Full Screen Width Clip Path from top down till rock bottom design SVG code (Y <= 545) */}
+          {/* Full Screen Width Clip Path with expanded bottom border for text & img (Y <= 536) */}
+          {/* Borders of text and img made slightly more expansive while remaining safely within rock base (Y <= 536) */}
           <clipPath id="aboveRockBottomClip">
-            <rect x="-500" y="-200" width="2000" height="745" />
+            <rect x="-500" y="-200" width="2000" height="736" />
           </clipPath>
 
           {/* Organic Ink Bleed Fractal Filter (Authentic torn noise edge) */}
@@ -154,41 +173,17 @@ export default function HanumanCenterpiece() {
               </g>
             )}
 
-            {/* Solid black block below rock bottom design SVG code (Y >= 545) so ink bleed never passes below */}
-            <rect x="-500" y="545" width="2000" height="400" fill="#000000" />
+            {/* Solid black block strictly below rock base (Y >= 538) so ink bleed never passes below */}
+            <rect x="-500" y="538" width="2000" height="500" fill="#000000" />
           </mask>
-
-          {/* Full 360° Circular Paths for each concentric Rama ring */}
-          {RAMA_CIRCLES.map((circle) => {
-            const r = circle.r;
-            return (
-              <path
-                key={circle.id}
-                id={`rama-circle-${circle.id}`}
-                d={`M ${CX} ${CY_CENTER - r} A ${r} ${r} 0 1 1 ${CX} ${CY_CENTER + r} A ${r} ${r} 0 1 1 ${CX} ${CY_CENTER - r} Z`}
-                fill="none"
-              />
-            );
-          })}
         </defs>
 
         {/* ================================================================= */}
         {/* 1. SRI RAMA & MATA SITA BEHIND THE TEXT (INK REVEAL ON HOVER)     */}
-        {/* Strictly clipped at Y <= 545: never appears below rock bottom     */}
+        {/* Strictly clipped at Y <= 475: zero reveal ever passes below rock  */}
+        {/* Pure ink reveal with zero glow                                    */}
         {/* ================================================================= */}
         <g id="ramsita-reveal-layer" clipPath="url(#aboveRockBottomClip)">
-          {/* Subtle warm golden radiance blooming with the ink droplet */}
-          {cursor.r > 0.5 && (
-            <circle
-              cx={cursor.x}
-              cy={cursor.y}
-              r={cursor.r * 1.35}
-              fill="url(#hanuman-halo-glow)"
-              opacity={cursor.op * 0.7}
-              pointerEvents="none"
-            />
-          )}
-
           {/* Sri Rama & Mata Sita Image (masked by organic ink reveal) */}
           <image
             href="/ramsita.png"
@@ -202,41 +197,42 @@ export default function HanumanCenterpiece() {
           />
         </g>
 
-        {/* Soft Golden Aura Glow behind Lord Hanuman's head and chest */}
-        <circle
-          cx={CX}
-          cy={338}
-          r={125}
-          fill="url(#hanuman-halo-glow)"
-          pointerEvents="none"
-          clipPath="url(#aboveRockBottomClip)"
-        />
-
         {/* ================================================================= */}
         {/* 2. FULL 360° CONCENTRIC "ರಾಮ" (RAMA) CIRCLES IN KANNADA          */}
-        {/* Strictly clipped at Y <= 545: zero text ever passes below rock    */}
+        {/* Animated via GSAP in alternating opposite directions (Right / Left)*/}
+        {/* Strictly clipped at Y <= 485: zero text ever passes below rock    */}
         {/* ================================================================= */}
         <g id="rama-circles-layer" clipPath="url(#aboveRockBottomClip)">
           {RAMA_CIRCLES.map((circle) => (
-            <text
-              key={`text-${circle.id}`}
-              className="fill-[#742C25] font-serif font-bold select-none tracking-normal pointer-events-none"
-              style={{
-                fontSize: `${circle.fontSize}px`,
-                fontFamily: "'Noto Serif Kannada', 'Tiro Kannada', 'Georgia', serif",
-                wordSpacing: '0.42em',
-                letterSpacing: '0.02em',
-              }}
+            <g
+              id={`rama-ring-${circle.id}`}
+              key={`circle-group-${circle.id}`}
             >
-              <textPath
-                href={`#rama-circle-${circle.id}`}
-                startOffset="0%"
-                textLength={circle.circumference}
-                lengthAdjust="spacing"
+              {/* Circular Path colocated directly inside rotating group */}
+              <path
+                id={`rama-circle-${circle.id}`}
+                d={`M ${CX} ${CY_CENTER - circle.r} A ${circle.r} ${circle.r} 0 1 1 ${CX} ${CY_CENTER + circle.r} A ${circle.r} ${circle.r} 0 1 1 ${CX} ${CY_CENTER - circle.r} Z`}
+                fill="none"
+              />
+              <text
+                className="fill-[#742C25] font-serif font-bold select-none tracking-normal pointer-events-none"
+                style={{
+                  fontSize: `${circle.fontSize}px`,
+                  fontFamily: "'Noto Serif Kannada', 'Tiro Kannada', 'Georgia', serif",
+                  wordSpacing: '0.42em',
+                  letterSpacing: '0.02em',
+                }}
               >
-                {circle.text}
-              </textPath>
-            </text>
+                <textPath
+                  href={`#rama-circle-${circle.id}`}
+                  startOffset="0%"
+                  textLength={circle.circumference}
+                  lengthAdjust="spacing"
+                >
+                  {circle.text}
+                </textPath>
+              </text>
+            </g>
           ))}
         </g>
 

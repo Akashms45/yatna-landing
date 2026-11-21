@@ -479,10 +479,10 @@ export default function PrivacyPolicy({ langIndex = 0, onBack }) {
               <p>
                 Email:{' '}
                 <a
-                  href="mailto:info@karyasiddhianjaneya.org"
+                  href="mailto:itsakashms452@gmail.com"
                   className="text-[#742C25] underline hover:text-[#C79A45]"
                 >
-                  info@karyasiddhianjaneya.org
+                  itsakashms452@gmail.com
                 </a>
               </p>
             </div>
